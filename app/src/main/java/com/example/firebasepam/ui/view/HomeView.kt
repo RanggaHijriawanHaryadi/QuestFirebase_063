@@ -45,7 +45,7 @@ import com.example.firebasepam.ui.viewmodel.PenyediaViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
+fun HomeView(
     navigateToItemEntry: () -> Unit,
     modifier: Modifier = Modifier,
     onDetailClick: (String) -> Unit = {},
@@ -71,6 +71,7 @@ fun HomeScreen(
             homeUiState = viewModel.mhsUiState,
             retryAction = { viewModel.getMhs() }, modifier = Modifier.padding(innerPadding),
             onDetailClick = onDetailClick, onDeleteClick = {
+                viewModel.deleteMhs(it)
                 viewModel.getMhs()
             }
         )
