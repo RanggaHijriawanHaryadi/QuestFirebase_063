@@ -36,6 +36,9 @@ class InsertViewModel(
             jenis_kelamin = if (event.jenis_kelamin.isNotEmpty()) null else "Jenis_Kelamin tidak boleh kosong",
             kelas = if (event.kelas.isNotEmpty()) null else "kelas tidak boleh kosong",
             angkatan = if (event.angkatan.isNotEmpty()) null else "angkatan tidak boleh kosong",
+            judul_skripsi = if (event.judul_skripsi.isNotEmpty()) null else "Judul Skripsi tidak boleh kosong",
+            dsn_pembimbing1 = if (event.dsn_pembimbing1.isNotEmpty()) null else "Dosen Pembimbing1 tidak boleh kosong",
+            dsn_pembimbing2 = if (event.dsn_pembimbing2.isNotEmpty()) null else "Dosen Pembimbing2 tidak boleh kosong",
         )
 
         uiEvent = uiEvent.copy(isEntryValid = errorState)
@@ -85,11 +88,14 @@ data class FormErrorState(
     val alamat: String? = null,
     val jenis_kelamin: String? = null,
     val kelas: String? = null,
-    val angkatan: String? = null
+    val angkatan: String? = null,
+    val judul_skripsi: String? = null,
+    val dsn_pembimbing1: String? = null,
+    val dsn_pembimbing2: String? = null
 ) {
     fun isValid() : Boolean {
         return nim == null && nama == null && alamat == null && jenis_kelamin == null
-                && kelas == null && angkatan == null
+                && kelas == null && angkatan == null && judul_skripsi == null && dsn_pembimbing1 == null && dsn_pembimbing2 == null
     }
 }
 
@@ -101,6 +107,9 @@ data class MahasiswaEvent(
     val jenis_kelamin: String="",
     val kelas: String="",
     val angkatan: String="",
+    val judul_skripsi: String="",
+    val dsn_pembimbing1: String="",
+    val dsn_pembimbing2: String=""
 )
 
 // Menyimpan input form ke dalam entity
@@ -110,5 +119,8 @@ fun MahasiswaEvent.toMhsModel() : Mahasiswa = Mahasiswa(
     alamat = alamat,
     jenis_kelamin = jenis_kelamin,
     kelas = kelas,
-    angkatan = angkatan
+    angkatan = angkatan,
+    judul_skripsi = judul_skripsi,
+    dsn_pembimbing1 = dsn_pembimbing1,
+    dsn_pembimbing2 = dsn_pembimbing2
 )

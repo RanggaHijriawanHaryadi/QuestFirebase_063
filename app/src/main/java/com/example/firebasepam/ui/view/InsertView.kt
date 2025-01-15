@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -22,6 +23,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -29,6 +31,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -49,6 +52,7 @@ fun InsertMhsView(
     modifier: Modifier = Modifier,
     viewModel: InsertViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ){
+
     val uiState = viewModel.uiState //State utama untuk loading, succesc, error
     val uiEvent = viewModel.uiEvent //State untuk Form dan validasi
     val snackbarHostState = remember { SnackbarHostState() }
@@ -81,7 +85,7 @@ fun InsertMhsView(
     }
 
     Scaffold (
-        modifier = modifier,
+        modifier = Modifier,
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
@@ -98,7 +102,7 @@ fun InsertMhsView(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp)
+                .padding(4.dp)
         ){
             InsertBodyMhs(
                 uiState = uiEvent,
@@ -124,38 +128,40 @@ fun InsertBodyMhs(
     uiState: InsertUiState,
     onClick: () -> Unit,
     homeUiState: FormState
-
-){
-    Column (
+) {
+    LazyColumn(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
-
-    ){
-        FormMahasiswa(
-            mahasiswaEvent = uiState.insertUiEvent,
-            onValueChange = onValueChange,
-            errorState = uiState.isEntryValid,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Button(
-            onClick = onClick,
-            modifier = Modifier.fillMaxWidth(),
-            enabled = homeUiState !is FormState.Loading,
-        ) {
-            if (homeUiState is  FormState.Loading){
-                CircularProgressIndicator(
-                    color = Color.White,
-                    modifier = Modifier
-                        .size(20.dp)
-                        .padding(end = 8.dp)
-                )
-                Text("Loading")
-            } else{
-                Text(text = "Add")
+    ) {
+        item {
+            FormMahasiswa(
+                mahasiswaEvent = uiState.insertUiEvent,
+                onValueChange = onValueChange,
+                errorState = uiState.isEntryValid,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+        item {
+            Button(
+                onClick = onClick,
+                modifier = Modifier.fillMaxWidth(),
+                enabled = homeUiState !is FormState.Loading,
+            ) {
+                if (homeUiState is FormState.Loading) {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        modifier = Modifier
+                            .size(20.dp)
+                            .padding(end = 8.dp)
+                    )
+                    Text("Loading...")
+                } else {
+                    Text("Tambah")
+                }
+            }
             }
         }
-    }
 }
 
 @Composable
@@ -202,7 +208,7 @@ fun FormMahasiswa(
             color = Color.Red
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         Text(text = "Jenis Kelamin")
         Row (modifier = Modifier.fillMaxWidth()
         ) {
@@ -244,7 +250,7 @@ fun FormMahasiswa(
             color = Color.Red
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         Text(text = "Kelas")
         Row {
             kelas.forEach { kelas ->
@@ -284,5 +290,51 @@ fun FormMahasiswa(
             text = errorState.angkatan ?: "",
             color = Color.Red
         )
+
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = mahasiswaEvent.judul_skripsi,
+            onValueChange = {
+                onValueChange(mahasiswaEvent.copy(judul_skripsi = it))
+            },
+            label = { Text("Judul Skripsi") },
+            isError = errorState.judul_skripsi != null,
+            placeholder = { Text("Masukkan Judul Skripsi") },
+        )
+        Text(
+            text = errorState.judul_skripsi ?: "",
+            color = Color.Red
+        )
+
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = mahasiswaEvent.dsn_pembimbing1,
+            onValueChange = {
+                onValueChange(mahasiswaEvent.copy(dsn_pembimbing1 = it))
+            },
+            label = { Text("Dosen Pembimbing 1") },
+            isError = errorState.dsn_pembimbing1 != null,
+            placeholder = { Text("Masukkan nama Dosen Pembimbing 1") },
+        )
+        Text(
+            text = errorState.dsn_pembimbing1 ?: "",
+            color = Color.Red
+        )
+
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = mahasiswaEvent.dsn_pembimbing2,
+            onValueChange = {
+                onValueChange(mahasiswaEvent.copy(dsn_pembimbing2 = it))
+            },
+            label = { Text("Dosen Pembimbing 2") },
+            isError = errorState.dsn_pembimbing2!= null,
+            placeholder = { Text("Masukkan nama Dosen Pembibing 2") },
+        )
+        Text(
+            text = errorState.dsn_pembimbing2 ?: "",
+            color = Color.Red
+        )
+
     }
 }

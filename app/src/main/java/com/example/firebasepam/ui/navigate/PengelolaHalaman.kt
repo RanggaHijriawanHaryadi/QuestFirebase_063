@@ -1,11 +1,14 @@
 package com.example.firebasepam.ui.navigate
 
+import DetailView
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.firebasepam.ui.view.HomeView
 import com.example.firebasepam.ui.view.InsertMhsView
 
@@ -25,6 +28,9 @@ fun PengelolaHalaman(
                 navigateToItemEntry = {
                     navController.navigate(DestinasiInsert.route)
                 },
+                onDetailClick = {
+                    navController.navigate("${DestinasiDetail.route}/$it")
+                }
             )
         }
 
@@ -35,6 +41,28 @@ fun PengelolaHalaman(
                     navController.navigate(DestinasiHome.route)
                 }
             )
+        }
+        composable(
+            DestinasiDetail.routeWithArgs,
+            arguments = listOf(
+                navArgument(DestinasiDetail.NIM){
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            val nim = it.arguments?.getString(DestinasiDetail.NIM)
+            nim?.let {
+                DetailView(
+                    onBack = {
+                        navController.navigate(DestinasiHome.route) {
+                            popUpTo(DestinasiHome.route) {
+                                inclusive = true
+                            }
+                        }
+                    },
+
+                )
+            }
         }
     }
 

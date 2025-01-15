@@ -15,7 +15,9 @@ object PenyediaViewModel {
         initializer {
             InsertViewModel(aplikasiMhs().container.mahasiswaRepository)
         }
-
+        initializer {
+            DetailViewModel(createSavedStateHandle(),aplikasiMhs().container.mahasiswaRepository)
+        }
     }
 }
 fun CreationExtras.aplikasiMhs(): MahasiswaApplications =
